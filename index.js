@@ -182,37 +182,42 @@ app.delete("/delete-image",async(req,res)=>{
  app.use("/uploads",express.static(path.join(__dirname,"uploads")));
  app.use("/assets",express.static(path.join(__dirname,"assets")));
 
- //Add travel story
-app.post("/add-travel-story",authenticateToken,async(req,res) =>{
+ // Add travel story
+app.post("/add-travel-story", authenticateToken, async (req, res) => {
 
-  const{title,story,visitedLocation,imageUrl,visitedDate}=req.body;
-
-  const{userId}=req.user
-  //validate required field
-  if(!title || !story || !visitedLocation || !imageUrl || !visitedDate){
-    return res.status(400).json({
-      error:true,message:"All fields are required"
-    });
-  }
-  //convert visitedDate from milliseconds to Date object
- const parsedVisitedDate=new Date (parseInt(visitedDate) );
-  try{
-    const TravelStory=new TravelStory({
-  title,
-  story,
-  visitedLocation,
-  userId,
-  imageUrl,
-  visitedDate:parsedVisitedDate,
-    });
-    await TravelStory.save();
-    res.status(201).json({story:TravelStory,message:"added successfully"});
-    
-  }catch(error){
-    res.status(400).json({error:true,message:error.message});
-  }
-
-});
+	const { title, story, visitedLocation, imageUrl, visitedDate } = req.body;
+  
+	const { userId } = req.user || {}; // Ensure req.user is defined
+  
+	// Validate required fields
+	if (!title || !story || !visitedLocation || !imageUrl || !visitedDate) {
+	  return res.status(400).json({
+		error: true,
+		message: "All fields are required"
+	  });
+	}
+  
+	// Convert visitedDate from milliseconds to Date object
+	const parsedVisitedDate = new Date(parseInt(visitedDate));
+  
+	try {
+	  const TravelStoryModel = new TravelStory({
+		title,
+		story,
+		visitedLocation,
+		userId,
+		imageUrl,
+		visitedDate: parsedVisitedDate,
+	  });
+  
+	  await TravelStoryModel.save();
+	  res.status(201).json({ story: TravelStoryModel, message: "Added successfully" });
+  
+	} catch (error) {
+	  res.status(400).json({ error: true, message: error.message });
+	}
+  });
+  
 
 //Get All Travel Story
 app.get("/get-all-stories",authenticateToken,async(req,res) =>{
