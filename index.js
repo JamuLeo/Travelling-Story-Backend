@@ -11,7 +11,7 @@ const path = require("path");
 const jwt = require("jsonwebtoken");
 
 const User = require("./models/userModel");
-const TravelStory = require("./models/travelStoryModel");
+const travelStory = require("./models/travelStoryModel");
 
 mongoose.connect(config.connectionString);
 
@@ -227,7 +227,7 @@ app.get("/get-all-stories",authenticateToken,async(req,res) =>{
   const TravelStories=await travelStory.find({userId:userId}).sort({isFavourite:-1});
 res.status(200).json({stories:TravelStories});
  }catch(error){
-  res.status(500).json({error:true,message:error.nessage});
+  res.status(500).json({error:true,message:error.message});
 
  }
 
