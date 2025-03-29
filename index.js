@@ -162,7 +162,7 @@ app.delete("/delete-image",async(req,res)=>{
   const filename=path.basename(imageUrl);
 
   //Define the file path
-  const filePath=path.join(_dirname,"uploads",filename);
+  const filePath=path.join(__dirname,"uploads",filename);
 
   //check if the file exists
   if(fs.existsSync(filePath)){
