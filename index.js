@@ -1,18 +1,21 @@
 require("dotenv").config();
-const config=require("./config.json");
-const mongoose=require("mongoose");
-const bcrypt=require("bcrypt");
-const express=require("express");
-const cors=require("cors");
-const{autheticateToken}=require("./utilities");
-const upload=require("./multer");
-const fs=require("fs");
-const path=require("path");
-const jwt=require("jsonwebtoken");
+const config = require("./config.json");
+const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
+const express = require("express");
+const cors = require("cors");
+const { authenticateToken } = require("./utilities"); // Fixed spelling of 'authenticateToken'
+const upload = require("./multer");
+const fs = require("fs");
+const path = require("path");
+const jwt = require("jsonwebtoken");
 
-const User=require("./models/userModel");
-const TravelStory=require("./models/travelStoryModel");
+const User = require("./models/userModel");
+const TravelStory = require("./models/travelStoryModel");
+
 mongoose.connect(config.connectionString);
+
+
 
 
 
@@ -61,6 +64,12 @@ app.post("/create-account",async(req,res) =>{
       message:"Registration successful",
       
 });
+
+
+
+
+
+
 });
 
 //Login
@@ -102,20 +111,21 @@ app.post("/login",async(req,res) =>{
 });
 
 
-//Get User
-app.get("/get-user",autheticateToken,async(req,res) =>{
- const{userId}=req.user;
- const isUser=await User.findOne({_id:userId});
-
-if(!isUser){
-  return res.sendStatus(401);
-}
-
-return res.json({
-  user:isUser,
-  message:"",
-});
-});
+// Get User
+app.get("/get-user", authenticateToken, async (req, res) => {
+	const { userId } = req.user;
+	const isUser = await User.findOne({ _id: userId });
+  
+	if (!isUser) {
+	  return res.sendStatus(401);
+	}
+  
+	return res.json({
+	  user: isUser,
+	  message: "",
+	});
+  });
+  
 
 
 
@@ -173,7 +183,7 @@ app.delete("/delete-image",async(req,res)=>{
  app.use("/assets",express.static(path.join(__dirname,"assets")));
 
  //Add travel story
-app.post("/add-travel-story",autheticateToken,async(req,res) =>{
+app.post("/add-travel-story",authenticateToken,async(req,res) =>{
 
   const{title,story,visitedLocation,imageUrl,visitedDate}=req.body;
 
@@ -205,7 +215,7 @@ app.post("/add-travel-story",autheticateToken,async(req,res) =>{
 });
 
 //Get All Travel Story
-app.get("/get-all-stories",autheticateToken,async(req,res) =>{
+app.get("/get-all-stories",authenticateToken,async(req,res) =>{
  const{userId}=req.user;
 
  try{
@@ -219,7 +229,7 @@ res.status(200).json({stories:TravelStories});
 });
 
 //update travel story
-app.put("/edit-story/:id",autheticateToken,async(req,res) =>{
+app.put("/edit-story/:id",authenticateToken,async(req,res) =>{
 const{id}=req.params;
 const{title,story,visitedLocation,imageUrl,visitedDate}=req.body;
 const{userId}=req.user;
@@ -261,7 +271,7 @@ const{userId}=req.user;
  
 
 //delete travel story
-app.delete("/delete-story/:id",autheticateToken,async(req,res) =>{
+app.delete("/delete-story/:id",authenticateToken,async(req,res) =>{
 const{id}=req.params;
 const{userId}=req.user;
 
@@ -303,7 +313,7 @@ catch(error){
 });
 
 //update is favourite
-app.put("/update-is-favouritey/:id",autheticateToken,async(req,res) =>{
+app.put("/update-is-favouritey/:id",authenticateToken,async(req,res) =>{
 const{is}=req.params;
 const{isFavourite}=req.body;
 const{userId}=req.user;
@@ -353,7 +363,7 @@ try{
 */
 
 //filter travel stories by date range
-app.get("/travel-stories/filter",autheticateToken,async(req,res) =>{
+app.get("/travel-stories/filter",authenticateToken,async(req,res) =>{
  const {startDate,endDate}=req.query;
  const{userId}=req.user;
 
