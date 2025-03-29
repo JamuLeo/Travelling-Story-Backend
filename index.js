@@ -28,7 +28,7 @@ app.use(cors({origin:"*"}));
 app.post("/create-account",async(req,res) =>{
     const{fullName,email,password}=req.body;
 
-    if(!fullname || !email || !password){
+    if(!fullName || !email || !password){
         return res
         .status(400)
         .json({error:true,message:"All fields are required"});
@@ -51,7 +51,7 @@ app.post("/create-account",async(req,res) =>{
     const accessToken=jwt.sign(
   
     {userId:user.id},
-    process.env.ACESS_TOKEN_SECRET,
+    process.env.ACCESS_TOKEN_SECRET,
     {
       expiresIn:"72h",
     }
@@ -59,7 +59,7 @@ app.post("/create-account",async(req,res) =>{
 
     return res.status(201).json({
       error:false,
-      user:{fullname:user.fullName,email:user.email},
+      user:{fullName:user.fullName,email:user.email},
       accessToken,
       message:"Registration successful",
       
@@ -95,7 +95,7 @@ app.post("/login",async(req,res) =>{
   const accessToken=jwt.sign(
   
     {userId:user.id},
-    process.env.ACESS_TOKEN_SECRET,
+    process.env.ACCESS_TOKEN_SECRET,
     {
       expiresIn:"72h",
     }
@@ -103,7 +103,7 @@ app.post("/login",async(req,res) =>{
 
     return res.json({
       error:false,
-      message:"Registration successful",
+      message:"Login successful",
       user:{fullname:user.fullName,email:user.email},
       accessToken,     
 });
