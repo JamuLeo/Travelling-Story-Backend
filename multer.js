@@ -15,7 +15,7 @@ const storage=multer.diskStorage({
 
 //file filter to accept only images 
 const fileFilter=(req,file,cb)=>{
-    if(file.nimetype.startsWith("image/")){
+    if(file.mimetype.startsWith("image/")){
         cb(null,true);
     }else{
         cb(new Error("only images are allowed"),false);
